@@ -1,15 +1,17 @@
 package works.weave.socks.aws.orders.http
 
 import org.eclipse.jetty
-import org.eclipse.jetty.servlet.ServletContextHandler
-import org.glassfish.jersey.server.ServerProperties
+import org.eclipse.jetty.servlet.{ServletContextHandler, ServletHolder}
+import org.glassfish.jersey.servlet.ServletContainer
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import works.weave.socks.aws.orders.presentation.MappingProvider
-import works.weave.socks.aws.orders.presentation.resource.OrdersResource
+import works.weave.socks.aws.orders.http.Server.Log
+
 import scala.collection.JavaConverters._
+import scala.util.control.NonFatal
 
 @Component
-class Server {
+class Server(val jerseyApp: JerseyApp) {
 
   def run(): Unit = {
 
@@ -21,23 +23,30 @@ class Server {
     val jettyServer = new jetty.server.Server(port)
     jettyServer.setHandler(context)
 
-    val jerseyServlet = context.addServlet(
-      classOf[org.glassfish.jersey.servlet.ServletContainer], "/*")
+    val servletContainer = new ServletContainer(jerseyApp)
+    val servletHolder = new ServletHolder(servletContainer)
+    context.addServlet(servletHolder, "/*")
+    val jerseyServlet = servletHolder
     jerseyServlet.setInitOrder(0)
 
-    // Tells the Jersey Servlet which REST service/class to load.
-    jerseyServlet.setInitParameter(
-      ServerProperties.PROVIDER_CLASSNAMES,
-      Vector[Class[_]]
-        ( classOf[OrdersResource]
-        , classOf[MappingProvider]
-        ).map(_.getCanonicalName).mkString(";"))
-
     try {
+      Log.info("Starting jetty")
       jettyServer.start()
+      Log.info("Jetty started")
       jettyServer.join()
+      Log.info("Jetty exited")
     } finally {
-      jettyServer.destroy()
+      Log.info("Destroying jetty")
+      try {
+        jettyServer.destroy()
+      } catch {
+        case NonFatal(e) => Log.error("Error during Jetty shutdown", e)
+      }
     }
   }
 }
+
+object Server {
+  val Log = LoggerFactory.getLogger(classOf[Server])
+}
+

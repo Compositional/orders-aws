@@ -21,12 +21,12 @@ object ServiceMain {
       val dynamo = bean[DynamoConnection]
       bean[DynamoSchema].createMissing(dynamo.client)
     }
-    initSchema()
+    //initSchema()
 
     bean[Server].run()
   }
 
-  @ComponentScan(basePackages = Array("works.weave.socks.aws.orders", "works.weave.spring.aws"))
+  @ComponentScan(basePackages = Array("works.weave.socks.aws.orders", "works.weave.spring.aws", "org.glassfish.jersey.server.spring"))
   class Config {
   }
 }

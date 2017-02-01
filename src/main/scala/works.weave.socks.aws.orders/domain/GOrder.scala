@@ -1,7 +1,5 @@
 package works.weave.socks.aws.orders.domain
 
-import java.net.URI
-
 trait GOrderTypes {
   type Customer
   type Address

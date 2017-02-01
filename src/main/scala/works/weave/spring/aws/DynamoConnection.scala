@@ -21,7 +21,6 @@ class DynamoConnection {
   lazy val endpoint = System.getenv().asScala.getOrElse("AWS_DYNAMODB_ENDPOINT", "http://dynamo:8000")
 
   lazy val client: AmazonDynamoDBClient = {
-    System.err.println("EP: " + endpoint)
     new AmazonDynamoDBClient(DefaultAWSCredentialsProviderChain.getInstance(), new ClientConfigurationFactory().getConfig)
         .after(_.setEndpoint(endpoint))
   }

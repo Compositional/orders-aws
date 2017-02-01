@@ -1,16 +1,14 @@
-package works.weave.socks.aws.orders.http
+package works.weave.socks.aws.orders.repository.web
 
 import java.lang.reflect.{ParameterizedType, Type}
 import java.net.URI
 
 import com.amazonaws.util.IOUtils
 import com.fasterxml.jackson.core.`type`.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.HttpClientBuilder
 import org.slf4j.LoggerFactory
 import works.weave.socks.aws.orders.ProjectDefaultJacksonMapper
-import works.weave.spring.Ops._
 
 object JSONHTTP {
 

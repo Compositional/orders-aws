@@ -24,20 +24,20 @@
 
 package works.weave.socks.aws.orders.presentation.value
 
-import java.net.URI
+import java.net.{URI}
 
 import works.weave.socks.aws.orders.domain.{GOrder, GOrderTypes}
 
 case class OrderRequest (
-  id: String,
-  customerId: String,
-  customer: URI, // Swagger: OrderCustomer,
-  address: URI, // Swagger: OrderAddress,
-  card: URI, // Swagger: OrderCard,
-  items: URI, // Swagger: List[OrderItems],
-  shipment: URI,
-  date: String,
-  total: Number) extends GOrder[Order.Minimal]
+                          id: String,
+                          customerId: String,
+                          customer: URI, // Swagger: OrderCustomer,
+                          address: URI, // Swagger: OrderAddress,
+                          card: URI, // Swagger: OrderCard,
+                          items: URI, // Swagger: List[OrderItems],
+                          shipment: URI,
+                          date: String,
+                          total: Number) extends GOrder[Order.Minimal]
 
 case class Order (
   id: String,
