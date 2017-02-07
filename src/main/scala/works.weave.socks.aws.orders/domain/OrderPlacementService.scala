@@ -13,14 +13,14 @@ import works.weave.socks.aws.orders.presentation.value.OrderCustomer
 import works.weave.socks.aws.orders.presentation.value.OrderItems
 import works.weave.socks.aws.orders.presentation.value.OrderRequest
 import works.weave.socks.aws.orders.presentation.value.OrderShipment
-import works.weave.socks.aws.orders.repository.AddressRepository
-import works.weave.socks.aws.orders.repository.AddressRepository.Address
-import works.weave.socks.aws.orders.repository.CardRepository
-import works.weave.socks.aws.orders.repository.CardRepository.Card
-import works.weave.socks.aws.orders.repository.CartRepository
-import works.weave.socks.aws.orders.repository.CartRepository.OrderItem
-import works.weave.socks.aws.orders.repository.CustomerRepository
-import works.weave.socks.aws.orders.repository.OrderRepository
+import works.weave.socks.aws.orders.domain.repository.AddressRepository
+import works.weave.socks.aws.orders.domain.repository.AddressRepository.Address
+import works.weave.socks.aws.orders.domain.repository.CardRepository
+import works.weave.socks.aws.orders.domain.repository.CardRepository.Card
+import works.weave.socks.aws.orders.domain.repository.CartRepository
+import works.weave.socks.aws.orders.domain.repository.CartRepository.OrderItem
+import works.weave.socks.aws.orders.domain.repository.CustomerRepository
+import works.weave.socks.aws.orders.domain.repository.OrderRepository
 
 // FIXME: do not depend on presentation
 

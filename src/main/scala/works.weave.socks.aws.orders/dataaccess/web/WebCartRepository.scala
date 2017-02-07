@@ -1,8 +1,8 @@
-package works.weave.socks.aws.orders.repository.web
+package works.weave.socks.aws.orders.dataaccess.web
 
 import java.net.URI
 import org.springframework.stereotype.Component
-import works.weave.socks.aws.orders.repository.CartRepository
+import works.weave.socks.aws.orders.domain.repository.CartRepository
 
 @Component
 class WebCartRepository extends CartRepository {

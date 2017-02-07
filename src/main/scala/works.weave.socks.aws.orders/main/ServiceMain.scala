@@ -3,9 +3,8 @@ package works.weave.socks.aws.orders.main
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.ComponentScan
 import scala.reflect.ClassTag
-import works.weave.socks.aws.orders.http.Server
-import works.weave.spring.aws.DynamoConfiguration
-import works.weave.spring.aws.DynamoSchema
+import works.weave.socks.spring.aws.DynamoConfiguration
+import works.weave.socks.spring.aws.DynamoSchema
 
 /**
   * Entrypoint for the orders web service
@@ -34,7 +33,7 @@ object ServiceMain {
     bean[Server].run()
   }
 
-  @ComponentScan(basePackages = Array("works.weave.socks.aws.orders", "works.weave.spring.aws"))
+  @ComponentScan(basePackages = Array("works.weave.socks.aws.orders", "works.weave.socks.spring"))
   class Config {
   }
 }

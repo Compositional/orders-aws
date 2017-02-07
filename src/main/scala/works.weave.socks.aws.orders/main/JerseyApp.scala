@@ -1,13 +1,9 @@
-package works.weave.socks.aws.orders.http
+package works.weave.socks.aws.orders.main
 
-import javax.inject.Singleton
-
-import org.glassfish.hk2.api.{ InjectionResolver, TypeLiteral }
-import org.glassfish.hk2.utilities.binding.AbstractBinder
 import org.glassfish.jersey.model.ContractProvider
 import org.glassfish.jersey.server.ResourceConfig
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.{ ApplicationContext, ApplicationContextAware }
+import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationContextAware
 import org.springframework.stereotype.Component
 import works.weave.socks.aws.orders.presentation.MappingProvider
 import works.weave.socks.aws.orders.presentation.resource.OrdersResource

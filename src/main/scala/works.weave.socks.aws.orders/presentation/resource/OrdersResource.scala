@@ -23,7 +23,7 @@ import works.weave.socks.aws.orders.presentation.value._
 @Path("/orders")
 class OrdersResource(
     orderPlacementService : OrderPlacementService,
-    orderRetrievalService: OrderRetrievalService) {
+    orderRetrievalService : OrderRetrievalService) {
 
   val dummyShipment = OrderShipment(id = "dummy shipment has no idea", "dummy shipment name")
 

@@ -1,7 +1,7 @@
-package works.weave.socks.aws.orders.repository
+package works.weave.socks.aws.orders.domain.repository
 
 import java.net.URI
-import works.weave.socks.aws.orders.repository.CardRepository.Card
+import works.weave.socks.aws.orders.domain.repository.CardRepository.Card
 
 trait CardRepository {
   def findByURI(uri : URI) : Card

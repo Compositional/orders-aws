@@ -1,14 +1,14 @@
-package works.weave.socks.aws.orders.http
+package works.weave.socks.aws.orders.main
 
 import org.eclipse.jetty
-import org.eclipse.jetty.servlet.{ ServletContextHandler, ServletHolder }
+import org.eclipse.jetty.servlet.ServletContextHandler
+import org.eclipse.jetty.servlet.ServletHolder
 import org.glassfish.jersey.servlet.ServletContainer
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import works.weave.socks.aws.orders.http.Server.Log
-
 import scala.collection.JavaConverters._
 import scala.util.control.NonFatal
+import Server._
 
 @Component
 class Server(val jerseyApp : JerseyApp) {

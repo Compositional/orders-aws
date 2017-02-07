@@ -1,7 +1,7 @@
-package works.weave.socks.aws.orders.repository
+package works.weave.socks.aws.orders.domain.repository
 
 import java.net.URI
-import works.weave.socks.aws.orders.repository.AddressRepository.Address
+import works.weave.socks.aws.orders.domain.repository.AddressRepository.Address
 
 trait AddressRepository {
   def findByURI(uri : URI) : Address

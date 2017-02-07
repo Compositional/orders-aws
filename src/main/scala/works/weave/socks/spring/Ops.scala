@@ -1,4 +1,4 @@
-package works.weave.spring
+package works.weave.socks.spring
 
 /**
   * Extra methods.

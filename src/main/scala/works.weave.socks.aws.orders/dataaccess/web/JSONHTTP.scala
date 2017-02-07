@@ -1,4 +1,4 @@
-package works.weave.socks.aws.orders.repository.web
+package works.weave.socks.aws.orders.dataaccess.web
 
 import com.amazonaws.util.IOUtils
 import com.fasterxml.jackson.core.`type`.TypeReference

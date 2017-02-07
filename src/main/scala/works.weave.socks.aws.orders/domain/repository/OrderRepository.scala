@@ -1,8 +1,8 @@
-package works.weave.socks.aws.orders.repository
+package works.weave.socks.aws.orders.domain.repository
 
 import java.time.LocalDateTime
 import java.util.UUID
-import works.weave.socks.aws.orders.repository.OrderRepository.Order
+import works.weave.socks.aws.orders.domain.repository.OrderRepository.Order
 
 trait OrderRepository extends Repository[UUID, Order] {
   def save(order : Order)

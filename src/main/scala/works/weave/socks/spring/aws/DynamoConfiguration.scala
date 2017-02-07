@@ -1,11 +1,11 @@
-package works.weave.spring.aws
+package works.weave.socks.spring.aws
 
 import com.amazonaws.ClientConfigurationFactory
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
 import org.springframework.stereotype.Component
 import scala.collection.JavaConverters._
-import works.weave.spring.Ops._
+import works.weave.socks.spring.Ops._
 
 @Component
 class DynamoConfiguration {

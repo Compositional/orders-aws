@@ -1,4 +1,4 @@
-package works.weave.socks.aws.orders.repository
+package works.weave.socks.aws.orders.domain.repository
 
 /**
   * Minimal repository

@@ -1,4 +1,4 @@
-package works.weave
+package works.weave.socks
 
 import javax.inject.Inject
 import scala.annotation.meta.beanSetter

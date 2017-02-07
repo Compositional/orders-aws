@@ -1,9 +1,9 @@
-package works.weave.socks.aws.orders.repository.dynamo
+package works.weave.socks.aws.orders.dataaccess.dynamo
 
 import com.amazonaws.services.dynamodbv2.model._
 import org.springframework.stereotype.Component
-import works.weave.spring.aws.DynamoConfiguration
-import works.weave.spring.aws.DynamoSchema
+import works.weave.socks.spring.aws.DynamoConfiguration
+import works.weave.socks.spring.aws.DynamoSchema
 
 /**
   * Declares the DynamoDB schema

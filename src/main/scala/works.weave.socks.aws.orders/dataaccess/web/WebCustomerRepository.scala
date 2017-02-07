@@ -1,9 +1,9 @@
-package works.weave.socks.aws.orders.repository.web
+package works.weave.socks.aws.orders.dataaccess.web
 
 import java.net.URI
 import org.springframework.stereotype.Component
-import works.weave.socks.aws.orders.repository.CustomerRepository
-import works.weave.socks.aws.orders.repository.CustomerRepository.Customer
+import works.weave.socks.aws.orders.domain.repository.CustomerRepository
+import works.weave.socks.aws.orders.domain.repository.CustomerRepository.Customer
 
 @Component
 class WebCustomerRepository extends CustomerRepository {

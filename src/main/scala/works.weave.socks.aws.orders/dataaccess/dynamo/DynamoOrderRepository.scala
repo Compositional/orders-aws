@@ -1,4 +1,4 @@
-package works.weave.socks.aws.orders.repository.dynamo
+package works.weave.socks.aws.orders.dataaccess.dynamo
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import com.amazonaws.services.dynamodbv2.model.GetItemResult
@@ -7,14 +7,14 @@ import java.time.LocalDateTime
 import java.util.UUID
 import org.springframework.stereotype.Component
 import scala.collection.JavaConverters._
-import works.weave.socks.aws.orders.repository.OrderRepository
-import works.weave.socks.aws.orders.repository.OrderRepository.Customer
-import works.weave.socks.aws.orders.repository.OrderRepository.Order
-import works.weave.spring.aws.DynamoConfiguration
+import works.weave.socks.aws.orders.domain.repository.OrderRepository
+import works.weave.socks.aws.orders.domain.repository.OrderRepository.Customer
+import works.weave.socks.aws.orders.domain.repository.OrderRepository.Order
 import DynamoOrderRepository._
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator
 import com.amazonaws.services.dynamodbv2.model.Condition
 import com.amazonaws.services.dynamodbv2.model.ScanRequest
+import works.weave.socks.spring.aws.DynamoConfiguration
 
 @Component
 class DynamoOrderRepository(dynamoConnection : DynamoConfiguration) extends OrderRepository {
