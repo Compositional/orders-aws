@@ -1,24 +1,31 @@
 package works.weave.socks.aws.orders.presentation.resource
 
+import java.net.URI
 import java.time.LocalDateTime
-import javax.inject.Inject
+import javax.ws.rs.GET
+import javax.ws.rs.POST
+import javax.ws.rs.Path
+import javax.ws.rs.PathParam
+import javax.ws.rs.Produces
+import javax.ws.rs.QueryParam
 import javax.ws.rs.core.MediaType
-import javax.ws.rs._
-
+import javax.ws.rs.core.Response
 import org.slf4j.LoggerFactory
-import works.weave.socks.aws.orders.presentation.value._
-import OrdersResource._
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import works.weave.socks.aws.orders.repository.{AddressRepository, CardRepository, CustomerRepository}
-import works.weave.socks.aws.orders.repository.web.JSONHTTP
+import works.weave.socks.aws.orders.domain.OrderPlacementService
+import works.weave.socks.aws.orders.domain.OrderRetrievalService
+import works.weave.socks.aws.orders.presentation.resource.OrdersResource._
+import works.weave.socks.aws.orders.presentation.value.OrderRequest
+import works.weave.socks.aws.orders.presentation.value.OrdersList
+import works.weave.socks.aws.orders.presentation.value._
 
 @Component
 @Path("/orders")
-class OrdersResource( addressRepository : AddressRepository
-                    , cardRepository: CardRepository
-                    , customerRepository: CustomerRepository
-                    ) {
+class OrdersResource(
+    orderPlacementService : OrderPlacementService,
+    orderRetrievalService: OrderRetrievalService) {
+
+  val dummyShipment = OrderShipment(id = "dummy shipment has no idea", "dummy shipment name")
 
   @GET
   @Produces(Array(MediaType.APPLICATION_JSON))
@@ -33,55 +40,89 @@ class OrdersResource( addressRepository : AddressRepository
         lastName = "Doe",
         username = "jdoe",
         addresses = Nil,
-        cards = Nil
-      ),
+        cards = Nil),
       address = OrderAddress(
         number = "2 a #3",
         street = "Weaver Street",
         city = "Soxton",
         postcode = "F00B4R",
-        country = "New Zealand"
-      ),
+        country = "New Zealand"),
       card = OrderCard(
         longNum = "1234-5678-9098-7654-3210",
         expires = "11/56",
-        ccv = "123"
-      ),
-      items = Nil,
-      shipment = None,
+        ccv = "123"),
+      items = List(OrderItems(id = "dummy item", itemId = "dummy product", quantity = 1, unitPrice = 1)),
+      shipment = Some(dummyShipment),
       date = LocalDateTime.now().toString,
-      total = 42.0f
-    )
+      total = 42.0f)
 
-    OrdersList(
-      OrdersListEmbedded(
-        List(order)
-      ),
-      null,
-      null
-    )
-
+    makeOrdersList(List(order))
   }
 
   @POST
   @Produces(Array(MediaType.APPLICATION_JSON))
-  def putOrder(order : OrderRequest) : Order = {
+  def postOrder(order : OrderRequest) : Response = {
 
     Log.debug("POST /orders handler running")
-    Log.info("order: {}", order)
 
-    Log.info("Address: {}", addressRepository.findByURI(order.address))
-    Log.info("card: {}", cardRepository.findByURI(order.card))
-    Log.info("customer: {}", customerRepository.findByURI(order.customer))
-    Log.info("items: {}", JSONHTTP.get[List[OrderItems]](order.items))
+    val response = orderPlacementService.placeOrder(order)
 
-    Order(
-      null,null,null,null,null,null,null,null,null
-    )
+    Log.info("POST /orders response: {}", response)
+
+    Response.created(new URI("http://tbd")).entity(response).build()
   }
 
+  @Path("search/customerId")
+  @GET
+  def searchByCustomerId(@QueryParam("custId") customerId : String) : OrdersList = {
+    // @QueryParam("custId") customerId : String /*, @QueryParam("sort") sort : String */ ) : OrdersList = {
 
+    Log.info("Search by {}", customerId)
+
+    val result = orderRetrievalService.searchByCustomerId(customerId)
+
+    Log.info("Search result: {}", result)
+
+    val order = Order(id = "id",
+      customerId = customerId,
+      customer = OrderCustomer(
+        firstName = "John",
+        lastName = "Doe",
+        username = "jdoe",
+        addresses = Nil,
+        cards = Nil),
+      address = OrderAddress(
+        number = "2 a #3",
+        street = "Weaver Street",
+        city = "Soxton",
+        postcode = "F00B4R",
+        country = "New Zealand"),
+      card = OrderCard(
+        longNum = "1234-5678-9098-7654-3210",
+        expires = "11/56",
+        ccv = "123"),
+      items = List(OrderItems(id = "dummy item", itemId = "dummy product", quantity = 1, unitPrice = 1)),
+      shipment = Some(dummyShipment),
+      date = LocalDateTime.now().toString,
+      total = 42.0f)
+
+    makeOrdersList(List(order))
+  }
   //Order(UUID.randomUUID(), UUID.randomUUID(), LocalDateTime.now(), total = 42.0f)
+  def makeOrdersList(list : List[Order]) : OrdersList = {
+    OrdersList(
+      _embedded = OrdersListEmbedded(
+        list),
+      _links = OrdersListLinks(
+        self = OrdersListLinksSelf("http://orders/orders/FIXME"),
+        profile = OrdersListLinksSelf("http://orders/orders/FIXME"), // FIXME 3×
+        search = OrdersListLinksSelf("http://orders/orders/FIXME")),
+      _page = OrdersListPage(
+        size = list.size,
+        totalElements = list.size,
+        totalPages = 1,
+        number = list.size))
+  }
 }
 object OrdersResource {
   val Log = LoggerFactory.getLogger(classOf[OrdersResource])

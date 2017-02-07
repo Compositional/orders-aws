@@ -1,10 +1,10 @@
 package works.weave.socks.aws.orders.repository.web
 
-import java.lang.reflect.{ParameterizedType, Type}
-import java.net.URI
-
 import com.amazonaws.util.IOUtils
 import com.fasterxml.jackson.core.`type`.TypeReference
+import java.lang.reflect.ParameterizedType
+import java.lang.reflect.Type
+import java.net.URI
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.HttpClientBuilder
 import org.slf4j.LoggerFactory
@@ -15,7 +15,6 @@ object JSONHTTP {
   val Log = LoggerFactory.getLogger(getClass)
 
   val objectMapper = ProjectDefaultJacksonMapper.build() // after (_.bla)
-
 
   def get[T : Manifest : NotNothing](uri : URI) : T = {
     val client = HttpClientBuilder.create.build
@@ -29,11 +28,11 @@ object JSONHTTP {
     objectMapper.readValue(responseString, typeReference[T])
   }
 
-  def typeReference[T: Manifest] = new TypeReference[T] {
+  def typeReference[T : Manifest] = new TypeReference[T] {
     override def getType = typeFromManifest(manifest[T])
   }
 
-  def typeFromManifest(m: Manifest[_]): Type = {
+  def typeFromManifest(m : Manifest[_]) : Type = {
     if (m.typeArguments.isEmpty) { m.runtimeClass }
     else new ParameterizedType {
       def getRawType = m.runtimeClass

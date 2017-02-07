@@ -3,18 +3,28 @@
 
 A microservices-demo service that provides ordering capabilities.
 
-The code is in Scala and uses Spring, Jackson and the Java DynamoDB client.
+The code is in Scala and uses Spring, Jersey and the Java DynamoDB client.
 
-For simplicity, error handling is achieved using runtime exceptions.
+Compared to the original `orders` service, this service cuts down heavily on dependency injection 'magic'. It does still use spring autowiring, but no autoconfiguration, no integration with other frameworks.
+It also pushes the use of reflection out of the core of the application. Reflection is still used in the presentation layer, but poses no maintenance risk on the rest of the application any more, because it is used in isolation.
+
+Simplifications:
+
+ - all error handling is performed using runtime exceptions.
+ - all sequences are `List`s
 
 # Build
 
-`GROUP=weaveworksdemos COMMIT=latest ./scripts/build.sh`
+    GROUP=weaveworksdemos COMMIT=latest ./scripts/build.sh
 
 # Test
 
-`./test/test.sh < python testing file >`. For example: `./test/test.sh unit.py`
+    ./test/test.sh < python testing file >
 
-# Manual test
+For example:
+ 
+    ./test/test.sh unit.py
 
-``
+# Manual test in `microservices-demo`
+
+    GROUP=weaveworksdemos COMMIT=latest ./scripts/build.sh && (cd ../microservices-demo/deploy/docker-compose && docker-compose up -d && docker-compose logs -f)

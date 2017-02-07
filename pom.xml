@@ -246,6 +246,29 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.scalariform</groupId>
+        <artifactId>scalariform-maven-plugin</artifactId>
+        <version>0.1.4</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>format</goal>
+            </goals>
+            <phase>process-sources</phase>
+            <configuration>
+              <!-- Line based diff–proof configuration -->
+              <alignParameters>false</alignParameters>
+              <compactStringConcatenation>false</compactStringConcatenation>
+              <rewriteArrowSymbols>false</rewriteArrowSymbols>
+              <placeScaladocAsterisksBeneathSecondAsterisk>true</placeScaladocAsterisksBeneathSecondAsterisk>
+              <spaceBeforeColon>true</spaceBeforeColon>
+              <spaceInsideBrackets>false</spaceInsideBrackets>
+              <spaceInsideParentheses>false</spaceInsideParentheses>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>net.alchim31.maven</groupId>
         <artifactId>scala-maven-plugin</artifactId>
         <version>3.2.1</version>
@@ -260,6 +283,7 @@
           <addScalacArgs>-Ywarn-numeric-widen</addScalacArgs>
           <addScalacArgs>-Ywarn-value-discard</addScalacArgs>
           <addScalacArgs>-Ywarn-unused</addScalacArgs>
+          <addScalacArgs>-feature</addScalacArgs>
         </configuration>
         <executions>
           <execution>

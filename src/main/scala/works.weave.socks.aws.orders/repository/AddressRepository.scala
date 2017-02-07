@@ -10,10 +10,10 @@ trait AddressRepository {
 object AddressRepository {
 
   case class Address(
-                      number: String,
-                      street: String,
-                      city: String,
-                      postcode: String,
-                      country: String)
+    number : String,
+    street : String,
+    city : String,
+    postcode : String,
+    country : String)
 
 }

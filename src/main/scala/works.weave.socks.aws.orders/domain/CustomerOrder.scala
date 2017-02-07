@@ -1,9 +1,9 @@
 package works.weave.socks.aws.orders.domain
 
-import java.time.{LocalDateTime, LocalTime}
+import java.time.LocalDateTime
 import java.util.UUID
 
-case class CustomerOrder (
+case class CustomerOrder(
   id : UUID,
   customerId : UUID,
 
@@ -16,5 +16,4 @@ case class CustomerOrder (
   // shipment : Shipment
 
   date : LocalDateTime,
-  total : Float
-)
+  total : Float)

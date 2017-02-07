@@ -1,13 +1,14 @@
 package works.weave.socks.aws.orders.main
 
-import org.springframework.context.annotation.{AnnotationConfigApplicationContext, ComponentScan}
-import works.weave.socks.aws.orders.http
-import works.weave.socks.aws.orders.http.Server
-import works.weave.spring.aws.{DynamoConnection, DynamoSchema}
-
+import org.springframework.context.annotation.AnnotationConfigApplicationContext
+import org.springframework.context.annotation.ComponentScan
 import scala.reflect.ClassTag
+import works.weave.socks.aws.orders.http.Server
+import works.weave.spring.aws.DynamoConfiguration
+import works.weave.spring.aws.DynamoSchema
 
-/** Entrypoint for the orders web service
+/**
+  * Entrypoint for the orders web service
   */
 object ServiceMain {
   def main(args : Array[String]) : Unit = {
@@ -17,16 +18,23 @@ object ServiceMain {
     val appContext = new AnnotationConfigApplicationContext(classOf[Config])
     def bean[T : ClassTag] : T = appContext.getBean(implicitly[ClassTag[T]].runtimeClass).asInstanceOf[T]
 
-    def initSchema(): Unit = {
-      val dynamo = bean[DynamoConnection]
+    def initSchema() : Unit = {
+      val dynamo = bean[DynamoConfiguration]
       bean[DynamoSchema].createMissing(dynamo.client)
     }
+    def resetSchema() : Unit = {
+      val dynamo = bean[DynamoConfiguration]
+      bean[DynamoSchema].resetDestructively(dynamo.client)
+    }
+
+    // FIXME: do neither of initSchema, resetSchema
     //initSchema()
+    //resetSchema()
 
     bean[Server].run()
   }
 
-  @ComponentScan(basePackages = Array("works.weave.socks.aws.orders", "works.weave.spring.aws", "org.glassfish.jersey.server.spring"))
+  @ComponentScan(basePackages = Array("works.weave.socks.aws.orders", "works.weave.spring.aws"))
   class Config {
   }
 }

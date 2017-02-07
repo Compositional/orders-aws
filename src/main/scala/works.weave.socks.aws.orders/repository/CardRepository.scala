@@ -9,8 +9,8 @@ trait CardRepository {
 
 object CardRepository {
   case class Card(
-                   longNum: String,
-                   expires: String,
-                   ccv: String)
+    longNum : String,
+    expires : String,
+    ccv : String)
 
 }

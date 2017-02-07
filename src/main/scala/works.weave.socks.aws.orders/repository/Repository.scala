@@ -1,6 +1,7 @@
 package works.weave.socks.aws.orders.repository
 
-/** Minimal repository
+/**
+  * Minimal repository
   */
 trait Repository[K, V] {
 

@@ -1,15 +1,11 @@
 package works.weave.socks.aws.orders.repository
 
 import java.net.URI
-
 import works.weave.socks.aws.orders.repository.CustomerRepository.Customer
 
 trait CustomerRepository {
-  def findByURI(customer: URI) : Customer
+  def findByURI(customer : URI) : Customer
 }
 object CustomerRepository {
-  case class Customer( firstName: String
-                     , lastName: String
-                     , username: String
-                     )
+  case class Customer(firstName : String, lastName : String, username : String)
 }
