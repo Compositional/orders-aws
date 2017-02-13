@@ -24,5 +24,5 @@
 
 package works.weave.socks.aws.orders.presentation.value
 
-case class OrdersListLinksSelf(
+case class LinksSelf(
   href : String)

@@ -53,7 +53,8 @@ class OrdersResource(
       items = List(OrderItems(id = "dummy item", itemId = "dummy product", quantity = 1, unitPrice = 1)),
       shipment = Some(dummyShipment),
       date = LocalDateTime.now().toString,
-      total = 42.0f)
+      total = 42.0f,
+      _links = OrderLinks(LinksSelf("http://orders/id_tbd")))
 
     makeOrdersList(List(order))
   }
@@ -82,40 +83,29 @@ class OrdersResource(
 
     Log.info("Search result: {}", result)
 
-    val order = Order(id = "id",
-      customerId = customerId,
-      customer = OrderCustomer(
-        firstName = "John",
-        lastName = "Doe",
-        username = "jdoe",
-        addresses = Nil,
-        cards = Nil),
-      address = OrderAddress(
-        number = "2 a #3",
-        street = "Weaver Street",
-        city = "Soxton",
-        postcode = "F00B4R",
-        country = "New Zealand"),
-      card = OrderCard(
-        longNum = "1234-5678-9098-7654-3210",
-        expires = "11/56",
-        ccv = "123"),
-      items = List(OrderItems(id = "dummy item", itemId = "dummy product", quantity = 1, unitPrice = 1)),
-      shipment = Some(dummyShipment),
-      date = LocalDateTime.now().toString,
-      total = 42.0f)
-
-    makeOrdersList(List(order))
+    makeOrdersList(result.map { x =>
+      Order(id = x.id.toString,
+        customerId = x.customerId,
+        customer = null,
+        address = null,
+        card = null,
+        items = null,
+        shipment = null,
+        date = x.date.toString,
+        total = x.total,
+        _links = OrderLinks(LinksSelf(
+          "http://orders/" + x.id)))
+    })
   }
-  //Order(UUID.randomUUID(), UUID.randomUUID(), LocalDateTime.now(), total = 42.0f)
+
   def makeOrdersList(list : List[Order]) : OrdersList = {
     OrdersList(
       _embedded = OrdersListEmbedded(
         list),
       _links = OrdersListLinks(
-        self = OrdersListLinksSelf("http://orders/orders/FIXME"),
-        profile = OrdersListLinksSelf("http://orders/orders/FIXME"), // FIXME 3×
-        search = OrdersListLinksSelf("http://orders/orders/FIXME")),
+        self = LinksSelf("http://orders/orders/FIXME"),
+        profile = LinksSelf("http://orders/orders/FIXME"), // FIXME 3×
+        search = LinksSelf("http://orders/orders/FIXME")),
       _page = OrdersListPage(
         size = list.size,
         totalElements = list.size,

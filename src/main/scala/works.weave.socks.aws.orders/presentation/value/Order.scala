@@ -48,7 +48,8 @@ case class Order(
   items : List[OrderItems],
   shipment : Option[OrderShipment],
   date : String,
-  total : Number) extends GOrder[Order.Full]
+  total : Number,
+  _links : OrderLinks) extends GOrder[Order.Full]
 
 object Order {
   trait Full extends GOrderTypes {
@@ -67,3 +68,6 @@ object Order {
     type Shipment = URI
   }
 }
+
+case class OrderLinks(
+  self : LinksSelf)

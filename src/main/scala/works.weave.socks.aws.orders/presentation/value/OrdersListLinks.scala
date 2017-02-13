@@ -25,6 +25,6 @@
 package works.weave.socks.aws.orders.presentation.value
 
 case class OrdersListLinks(
-  self : OrdersListLinksSelf,
-  profile : OrdersListLinksSelf,
-  search : OrdersListLinksSelf)
+  self : LinksSelf,
+  profile : LinksSelf,
+  search : LinksSelf)

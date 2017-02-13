@@ -21,6 +21,8 @@ import works.weave.socks.aws.orders.domain.repository.CartRepository
 import works.weave.socks.aws.orders.domain.repository.CartRepository.OrderItem
 import works.weave.socks.aws.orders.domain.repository.CustomerRepository
 import works.weave.socks.aws.orders.domain.repository.OrderRepository
+import works.weave.socks.aws.orders.presentation.value.OrderLinks
+import works.weave.socks.aws.orders.presentation.value.LinksSelf
 
 // FIXME: do not depend on presentation
 
@@ -97,7 +99,7 @@ class OrderPlacementService(
     orderRepository.save(order)
 
     Order(
-      id = "tbd", // FIXME
+      id = order.id.toString, // FIXME
       customerId = orderRequest.customer.toString,
       customer = presentCustomer(customer),
       address = presentAddress(address),
@@ -105,7 +107,8 @@ class OrderPlacementService(
       items = cart.map(presentItem),
       shipment = Some(OrderShipment(id = "hello", name = "world")), // FIXME
       date = LocalDateTime.now().toString,
-      total = total)
+      total = total,
+      _links = OrderLinks(LinksSelf("http://orders/" + order.id.toString)))
   }
 
 }
