@@ -19,11 +19,9 @@ Simplifications:
 
 # Test
 
-    ./test/test.sh < python testing file >
-
-For example:
- 
     ./test/test.sh unit.py
+    ./test/test.sh component.py
+    GROUP=weaveworksdemos COMMIT=latest ./test/test.sh container.py --tag latest
 
 # Manual test in `microservices-demo`
 

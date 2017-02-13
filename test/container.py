@@ -2,7 +2,6 @@ import argparse
 import sys
 import unittest
 import os
-import urllib
 from util.Api import Api
 from time import sleep
 from util.Docker import Docker
@@ -36,27 +35,35 @@ class OrdersContainerTest(unittest.TestCase):
     TAG = "latest"
     COMMIT = ""
     container_name = Docker().random_container_name('orders')
-    mongo_container_name = Docker().random_container_name('orders-db')
+    dynamodb_container_name = Docker().random_container_name('orders-db')
 
     def __init__(self, methodName='runTest'):
+        print ("+init super")
         super(OrdersContainerTest, self).__init__(methodName)
+        print ("+init")
         self.users_mock = ServiceMock("users-orders-mock", "users-orders-mock")
         self.payment_mock = ServiceMock("payment", "payment")
         self.shipping_mock = ServiceMock("shipping", "shipping")
         self.ip = ""
+        print ("+init done")
 
     def setUp(self):
+        print ("+setUp")
         self.users_mock.start_container()
         self.payment_mock.start_container()
         self.shipping_mock.start_container()
-        Docker().start_container(container_name=self.mongo_container_name, image="mongo", host="orders-db")
+        Docker().start_container(container_name=self.dynamodb_container_name, image="deangiberson/aws-dynamodb-local", host="orders-db")
 
         command = ['docker', 'run',
                    '-d',
                    '--name', OrdersContainerTest.container_name,
+                   '--env', 'AWS_DYNAMODB_ENDPOINT=http://orders-db:8080',
+                   '--env', 'AWS_ACCESS_KEY=foo',
+                   '--env', 'AWS_SECRET_KEY=bar',
+                   '--env', 'PORT=80',
                    '-h', OrdersContainerTest.container_name,
                    '--link',
-                   OrdersContainerTest.mongo_container_name,
+                   OrdersContainerTest.dynamodb_container_name,
                    '--link',
                    self.users_mock.container_name,
                    '--link',
@@ -66,26 +73,35 @@ class OrdersContainerTest(unittest.TestCase):
                    'weaveworksdemos/orders-aws:' + self.COMMIT]
         Docker().execute(command, dump_streams=True)
         self.ip = Docker().get_container_ip(OrdersContainerTest.container_name)
+        print ("### orders container ip: " + self.ip)
+        print ("+setUp done")
 
     def tearDown(self):
         Docker().kill_and_remove(OrdersContainerTest.container_name)
-        Docker().kill_and_remove(OrdersContainerTest.mongo_container_name)
+        Docker().kill_and_remove(OrdersContainerTest.dynamodb_container_name)
         self.users_mock.cleanup()
         self.payment_mock.cleanup()
         self.shipping_mock.cleanup()
 
     def test_api_validated(self):
+        print ("+Entering test api validated")
+        print ("+self.ip: " + self.ip)
         limit = 30
         while Api().noResponse('http://' + self.ip + ':80/orders'):
             if limit == 0:
                 self.fail("Couldn't get the API running")
             limit = limit - 1
             sleep(1)
+            print ("+self.ip: " + self.ip)
 
         out = Dredd().test_against_endpoint(
             "orders-aws", 'http://' + self.ip + ':80/',
-            links=[self.mongo_container_name, self.container_name],
-            env=[("MONGO_ENDPOINT", "mongodb://orders-db:27017/data")],
+            links=[self.dynamodb_container_name, self.container_name],
+            env=[ ("AWS_DYNAMODB_ENDPOINT", "http://orders-db:8080")
+                , ("AWS_ACCESS_KEY", "foo")
+                , ("AWS_SECRET_KEY", "bar")
+                , ("PORT", "80")
+                ],
             dump_streams=True)
         self.assertGreater(out.find("0 failing"), -1)
         self.assertGreater(out.find("0 errors"), -1)

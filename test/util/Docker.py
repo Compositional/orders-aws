@@ -5,6 +5,11 @@ from random import random
 # From http://blog.bordage.pro/avoid-docker-py/
 class Docker:
     def kill_and_remove(self, ctr_name):
+        command = ['docker', 'logs', ctr_name]
+        try:
+            self.execute(command)
+        except RuntimeError as e:
+            print(e)
         command = ['docker', 'rm', '-f', ctr_name]
         try:
             self.execute(command)

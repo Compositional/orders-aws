@@ -10,7 +10,7 @@ class JavaServices(unittest.TestCase):
         script_dir = os.path.dirname(os.path.realpath(__file__))
         code_dir = script_dir + "/.."
         home = expanduser("~")
-        command = ['docker', 'run', '--rm', '-v', home + '/.m2:/root/.m2', '-v', code_dir + ':/usr/src/mymaven', '-w',
+        command = ['docker', 'run', '--rm', '--env', 'LANG=en_US.UTF-8', '-v', home + '/.m2:/root/.m2', '-v', code_dir + ':/usr/src/mymaven', '-w',
                    '/usr/src/mymaven', 'maven:3.2-jdk-8', 'mvn', 'integration-test']
         print(Docker().execute(command))
 
