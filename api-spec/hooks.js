@@ -1,6 +1,14 @@
 const hooks = require('hooks');
-const {MongoClient} = require('mongodb');
-const ObjectID = require('mongodb').ObjectID;
+const ddb = require('dynamodb').ddb({ accessKeyId: '',
+                                    secretAccessKey: '',
+                                     endpoint: 'http://orders-db'})
+
+function ObjectID(s) {
+    return s;
+}
+
+//const {MongoClient} = require('dynamodb');
+// const ObjectID = require('dynamodb').ObjectID;
 
 let db;
 
@@ -38,13 +46,20 @@ const customer = [
 
 // Setup database connection before Dredd starts testing
 hooks.beforeAll((transactions, done) => {
-    var MongoEndpoint = process.env.MONGO_ENDPOINT ||  'mongodb://localhost:32769/data';
-    MongoClient.connect(MongoEndpoint, function(err, conn) {
-	if (err) {
+    //var MongoEndpoint = process.env.MONGO_ENDPOINT ||  'mongodb://localhost:32769/data';
+    //MongoClient.connect(MongoEndpoint, function(err, conn) {
+	//if (err) {
+	 //   console.error(err);
+	//}
+
+	console.log("Contacting DynamoDB")
+	ddb.listTables({}, function(err, res) {
+	  if (err) {
 	    console.error(err);
-	}
-	db = conn;
-	done(err);
+	  } else {
+	    console.log("DynamoDB tables: " + res);
+	  }
+	  done(err);
     });
 });
 

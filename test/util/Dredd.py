@@ -22,6 +22,7 @@ class Dredd:
         command.extend([Dredd.image,
                         "/tmp/specs/{0}.json".format(service),
                         api_endpoint,
+                        "--level", "verbose",
                         "-f",
                         "/tmp/specs/hooks.js".format(service)])
         out = Docker().execute(command, dump_streams=dump_streams)

@@ -108,7 +108,7 @@ class OrderPlacementService(
       shipment = Some(OrderShipment(id = "hello", name = "world")), // FIXME
       date = LocalDateTime.now().toString,
       total = total,
-      _links = OrderLinks(LinksSelf("http://orders/" + order.id.toString)))
+      _links = OrderLinks(LinksSelf("http://orders/orders/" + order.id.toString)))
   }
 
 }

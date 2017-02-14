@@ -69,11 +69,15 @@ class OrdersResource(
 
     Log.info("POST /orders response: {}", response)
 
-    Response.created(new URI("http://tbd")).entity(response).build()
+    Response
+      .created(new URI("http://orders/orders/" + response._links.self.href))
+      .entity(response)
+      .build()
   }
 
-  @Path("search/customerId")
   @GET
+  @Path("search/customerId")
+  @Produces(Array(MediaType.APPLICATION_JSON))
   def searchByCustomerId(@QueryParam("custId") customerId : String) : OrdersList = {
     // @QueryParam("custId") customerId : String /*, @QueryParam("sort") sort : String */ ) : OrdersList = {
 

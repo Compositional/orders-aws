@@ -95,7 +95,7 @@ class OrdersContainerTest(unittest.TestCase):
             print ("+self.ip: " + self.ip)
 
         out = Dredd().test_against_endpoint(
-            "orders-aws", 'http://' + self.ip + ':80/',
+            "orders", 'http://' + self.ip + ':80/',
             links=[self.dynamodb_container_name, self.container_name],
             env=[ ("AWS_DYNAMODB_ENDPOINT", "http://orders-db:8080")
                 , ("AWS_ACCESS_KEY", "foo")
