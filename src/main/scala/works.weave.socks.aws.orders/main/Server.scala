@@ -9,11 +9,14 @@ import org.springframework.stereotype.Component
 import scala.collection.JavaConverters._
 import scala.util.control.NonFatal
 import Server._
+import org.eclipse.jetty.util.log.Slf4jLog
 
 @Component
 class Server(val jerseyApp : JerseyApp) {
 
   def run() : Unit = {
+
+    jetty.util.log.Log.setLog(new Slf4jLog())
 
     val port = System.getenv().asScala.getOrElse("PORT", "80").toInt
 

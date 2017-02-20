@@ -25,27 +25,6 @@ abstract class DynamoSchema(dynamoConnection : DynamoConfiguration) {
     }
   }
 
-  /**
-    * @param timeout max time waiting (excludes the actuall polling effort)
-    * @param f procedure that should return true
-    * @return
-    */
-  def pollWithTimeout(timeout : Int) = new {
-    def until(f : => Boolean) : Boolean = {
-      def loop(timeoutBudget : Int)(delayMillis : Int) : Boolean = {
-        if (f) {
-          true
-        } else if (timeoutBudget <= 0) {
-          false
-        } else {
-          Thread.sleep(Math.min(timeoutBudget, delayMillis))
-          loop(timeoutBudget - delayMillis)(delayMillis * 2)
-        }
-      }
-      loop(timeout)(10)
-    }
-  }
-
   def resetDestructively(client : AmazonDynamoDBClient) : Unit = {
     val tableNames = client.listTables().getTableNames.asScala.toSet
 
@@ -56,7 +35,7 @@ abstract class DynamoSchema(dynamoConnection : DynamoConfiguration) {
 
         client.deleteTable(name)
         LOG.info("Awaiting deletion")
-        pollWithTimeout(60000) until {
+        Poll.withTimeout(60000) until {
           try {
             client.describeTable(name)
             false
@@ -96,4 +75,34 @@ abstract class DynamoSchema(dynamoConnection : DynamoConfiguration) {
     after (_.setKeySchema(keySchema.asJava))
     after (_.setProvisionedThroughput(provisionedThrougput)))
 
+}
+object Poll {
+  /**
+    * @param timeout max time waiting (excludes the actuall polling effort)
+    * @param f procedure that should return true
+    * @return
+    */
+  def withTimeout(timeout : Int) = new PollUntilSyntax {
+    def until(f : => Boolean) : Boolean = {
+      def loop(timeoutBudget : Int)(delayMillis : Int) : Boolean = {
+        if (f) {
+          true
+        } else if (timeoutBudget <= 0) {
+          false
+        } else {
+          Thread.sleep(Math.min(timeoutBudget, delayMillis))
+          loop(timeoutBudget - delayMillis)(delayMillis * 2)
+        }
+      }
+      loop(timeout)(10)
+    }
+  }
+  /** Syntactic convenience trait for pollWithTimeout */
+  trait PollUntilSyntax {
+    /**
+      * @param f procedure that will be polled until it returns true
+      * @return true if `f` succeeded before the timeout, false otherwise.
+      */
+    def until(f : => Boolean) : Boolean
+  }
 }

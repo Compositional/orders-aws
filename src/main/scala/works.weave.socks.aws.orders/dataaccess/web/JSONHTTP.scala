@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.`type`.TypeReference
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import java.net.URI
+import javax.xml.ws.http.HTTPException
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.HttpClientBuilder
 import org.slf4j.LoggerFactory
@@ -23,9 +24,12 @@ object JSONHTTP {
     val response = client.execute(get)
     val responseString = IOUtils.toString(response.getEntity.getContent)
     Log.info(s"Got status ${response.getStatusLine.getStatusCode}")
-    require(response.getStatusLine.getStatusCode == 200)
-    Log.info(s"Got response from URI $uri: $responseString")
-    objectMapper.readValue(responseString, typeReference[T])
+    if (response.getStatusLine.getStatusCode == 200) {
+      Log.info(s"Got response from URI $uri: $responseString")
+      objectMapper.readValue(responseString, typeReference[T])
+    } else {
+      throw new HTTPException(response.getStatusLine.getStatusCode)
+    }
   }
 
   def typeReference[T : Manifest] = new TypeReference[T] {

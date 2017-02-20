@@ -14,9 +14,19 @@ import org.springframework.stereotype.Component
 import works.weave.socks.aws.orders.domain.OrderPlacementService
 import works.weave.socks.aws.orders.domain.OrderRetrievalService
 import works.weave.socks.aws.orders.presentation.resource.OrdersResource._
+import works.weave.socks.aws.orders.presentation.value.LinksSelf
+import works.weave.socks.aws.orders.presentation.value.Order
+import works.weave.socks.aws.orders.presentation.value.OrderAddress
+import works.weave.socks.aws.orders.presentation.value.OrderCard
+import works.weave.socks.aws.orders.presentation.value.OrderCustomer
+import works.weave.socks.aws.orders.presentation.value.OrderItems
+import works.weave.socks.aws.orders.presentation.value.OrderLinks
 import works.weave.socks.aws.orders.presentation.value.OrderRequest
+import works.weave.socks.aws.orders.presentation.value.OrderShipment
 import works.weave.socks.aws.orders.presentation.value.OrdersList
-import works.weave.socks.aws.orders.presentation.value._
+import works.weave.socks.aws.orders.presentation.value.OrdersListEmbedded
+import works.weave.socks.aws.orders.presentation.value.OrdersListLinks
+import works.weave.socks.aws.orders.presentation.value.OrdersListPage
 
 @Component
 @Path("/orders")
@@ -27,7 +37,7 @@ class OrdersResource(
   val dummyShipment = OrderShipment(id = "dummy shipment has no idea", "dummy shipment name")
 
   @GET
-  @Produces(Array(MediaType.APPLICATION_JSON))
+  @Produces(Array(MediaType.APPLICATION_JSON, "application/hal+json"))
   def orders : OrdersList = {
 
     Log.debug("GET /orders handler running")
@@ -60,7 +70,7 @@ class OrdersResource(
   }
 
   @POST
-  @Produces(Array(MediaType.APPLICATION_JSON))
+  @Produces(Array(MediaType.APPLICATION_JSON, "application/hal+json"))
   def postOrder(order : OrderRequest) : Response = {
 
     Log.debug("POST /orders handler running")

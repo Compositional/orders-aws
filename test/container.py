@@ -21,6 +21,7 @@ class ServiceMock:
                    'weaveworksdemos/json-server',
                    '--port', '80']
         Docker().execute(command)
+        os.system("docker logs -f " + self.container_name + " &")
         sleep(2)
 
     def cleanup(self):
@@ -57,9 +58,9 @@ class OrdersContainerTest(unittest.TestCase):
         command = ['docker', 'run',
                    '-d',
                    '--name', OrdersContainerTest.container_name,
-                   '--env', 'AWS_DYNAMODB_ENDPOINT=http://orders-db:8080',
-                   '--env', 'AWS_ACCESS_KEY=foo',
-                   '--env', 'AWS_SECRET_KEY=bar',
+                   '--env', 'AWS_DYNAMODB_ENDPOINT=http://'+OrdersContainerTest.dynamodb_container_name+':8000',
+                   '--env', 'AWS_ACCESS_KEY_ID=foo',
+                   '--env', 'AWS_SECRET_ACCESS_KEY=bar',
                    '--env', 'PORT=80',
                    '-h', OrdersContainerTest.container_name,
                    '--link',
@@ -72,6 +73,7 @@ class OrdersContainerTest(unittest.TestCase):
                    self.shipping_mock.container_name,
                    'weaveworksdemos/orders-aws:' + self.COMMIT]
         Docker().execute(command, dump_streams=True)
+        os.system("docker logs -f " + OrdersContainerTest.container_name + " &")
         self.ip = Docker().get_container_ip(OrdersContainerTest.container_name)
         print ("### orders container ip: " + self.ip)
         print ("+setUp done")
@@ -97,7 +99,7 @@ class OrdersContainerTest(unittest.TestCase):
         out = Dredd().test_against_endpoint(
             "orders", 'http://' + self.ip + ':80/',
             links=[self.dynamodb_container_name, self.container_name],
-            env=[ ("AWS_DYNAMODB_ENDPOINT", "http://orders-db:8080")
+            env=[ ("AWS_DYNAMODB_ENDPOINT", "http://" + self.dynamodb_container_name + ":8000")
                 , ("AWS_ACCESS_KEY", "foo")
                 , ("AWS_SECRET_KEY", "bar")
                 , ("PORT", "80")

@@ -29,7 +29,7 @@ class DynamoOrderRepository(dynamoConnection : DynamoConfiguration) extends Orde
     Customer()
   }
   def customerToJSON(customer : OrderRepository.Customer) : String = {
-    "{}"
+    "{}" // FIXME
   }
 
   private def fromDB(map : java.util.Map[String, AttributeValue]) : Order = {
